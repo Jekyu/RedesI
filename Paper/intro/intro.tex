@@ -1,0 +1,49 @@
+\section{Formulación del Problema}
+
+En la actualidad, los usuarios de centros médicos, clínicas y hospitales (especialmente pacientes crónicos, de la tercera edad o con movilidad reducida) se enfrentan a una serie de inconvenientes al momento de adquirir sus medicamentos recetados. Estos problemas incluyen:
+
+\begin{itemize}
+    \item \textbf{Tiempos de Espera Prolongados:} Después de una consulta, el paciente debe dirigirse a la farmacia, hacer una fila para entregar la receta, esperar a que preparen el pedido y luego hacer otra fila para pagar. Esto puede agregar más de una hora a su visita.
+    \item \textbf{Congestión en Áreas Comunes:} Las farmacias de las centrales médicas suelen estar abarrotadas, generando estrés tanto para los pacientes como para el personal.
+    \item \textbf{Dificultad para Pacientes con Movilidad Reducida:} Para personas mayores, discapacitadas o post-operadas, el desplazamiento físico dentro de un gran complejo médico puede ser una tarea difícil y dolorosa.
+    \item \textbf{Ineficiencia en la Gestión de Pedidos:} El sistema tradicional de entrega manual de recetas y preparación bajo demanda es propenso a errores humanos (lectura de recetas, equivocación de medicamento) y no está optimizado para la gestión de múltiples pedidos de manera simultánea.
+    \item \textbf{Falta de Seguimiento:} El paciente no tiene visibilidad del estado de su pedido una vez entregada la receta, generando incertidumbre.
+\end{itemize}
+
+Estos problemas evidencian la necesidad de un sistema que optimice el proceso de dispensación y entrega de medicamentos, mejorando la experiencia del usuario y la eficiencia operativa de la central médica mediante el uso de la tecnología.
+
+\section{Objetivos}
+\label{sec:objetivos}
+
+\subsection{Objetivo General}
+Diseñar e implementar un prototipo de aplicación móvil y un sistema \textit{backend} que optimice el proceso de solicitud y entrega de medicamentos en una central médica.
+
+\subsection{Objetivos Específicos}
+\label{subsec:objetivos-especificos}
+
+\begin{enumerate}
+    \item Desarrollar un módulo de usuario final (aplicación móvil) que permita a los pacientes:
+    \begin{itemize}
+        \item Escanear o cargar digitalmente su receta médica.
+        \item Realizar el pedido de sus medicamentos de forma remota.
+        \item Realizar el pago de forma electrónica integrada.
+        \item Recibir notificaciones en tiempo real sobre el estado de su pedido.
+        \item Solicitar la entrega del pedido en un punto específico.
+    \end{itemize}
+    
+    \item Desarrollar un módulo de administración (aplicación web o de escritorio) para el personal de la farmacia que permita:
+    \begin{itemize}
+        \item Visualizar un \textit{dashboard} con los pedidos entrantes en tiempo real.
+        \item Gestionar el estado de cada pedido.
+        \item Notificar automáticamente al usuario.
+        \item Gestionar una flota de mensajeros/entregadores.
+    \end{itemize}
+    
+    \item Diseñar y modelar la arquitectura de red y comunicación del sistema, definiendo:
+    \begin{itemize}
+        \item Los protocolos de comunicación.
+        \item La estructura de la base de datos.
+        \item Los mecanismos de seguridad para proteger los datos sensibles.
+    \end{itemize}
+  
+\end{enumerate}
