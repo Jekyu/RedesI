@@ -18,90 +18,9 @@ Se configura la red LAN con IPv4 privadas.
 \subsection{Ping}
 Se ejecuta pruebas de ping entre ambas bajo IEEE 802.3 (cable) y IEEE 802.11 (WiFi). Los pings se ejecutan de diferentes tamaños (Ej: ping -t x.x.x.x -l 60000).\\
 
-\subsubsection{\textbf{Wifi - Lan}}
-Se hicieron prebas de ping Wifi - Lan con diferentes paquetes:
+\input{punto1/p1_ping.tex}
 
-    \begin{figure}[H]
-        \centering
-        \includegraphics[width=\columnwidth]{punto1/p1_ping_wifi_lan_20k.jpeg}
-        \caption{Ping Wifi - Lan, 20000}
-        \label{fig:ping_wifi_lan_20k}
-    \end{figure}
-
-    \begin{figure}[H]
-        \centering
-        \includegraphics[width=\columnwidth]{punto1/p1_ping_wifi_lan_40k.jpeg}
-        \caption{Ping Wifi - Lan, 40000}
-        \label{fig:ping_wifi_lan_40k}
-    \end{figure}
-
-    \begin{figure}[H]
-        \centering
-        \includegraphics[width=\columnwidth]{punto1/p1_ping_wifi_lan_60k.jpeg}
-        \caption{Ping Wifi - Lan, 60000}
-        \label{fig:ping_wifi_lan_6k}
-    \end{figure}
-
-
-\subsubsection{Lan - Wifi}
-Se hicieron prebas de ping Lan - Wifi con diferentes paquetes:
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\columnwidth]{punto1/p1_ping_lan_wifi_20k.jpeg}
-    \caption{Ping Lan - Wifi, 20000}
-    \label{fig:ping_lan_wifi_20k}
-\end{figure}
-
-\subsubsection{Wifi - Wifi}
-Se hicieron prebas de ping Wifi - Wifi con diferentes paquetes:
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\columnwidth]{punto1/p1_ping_wifi_wifi_40k.jpeg}
-    \caption{Ping Wifi - Wifi, 40000}
-    \label{fig:ping_wifi_wifi_40k}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\columnwidth]{punto1/p1_ping_wifi_wifi_60k.jpeg}
-    \caption{Ping Wifi - Wifi, 60000}
-    \label{fig:ping_wifi_wifi_6k}
-\end{figure}
-
-
-%Haga una tabla y explique las diferencias que hay entre diferentes velocidades mínimo tres (3), entre las velocidades teóricas (ver tablas No. 1 y 2) y las velocidades obtenidas en la ejecución de los Pings.
-% Nota 1: Hay que considerar las tablas No.1 y No. 2, con el fin de evaluar pertinentemente el estándar relacionado con las normas IEEE 802.3 y IEEE 802.11, ya que se presentan cambios con las velocidades y la técnica de modulación.
 \subsection{Wireshark}
 Se captura el tráfico con Wireshark
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\columnwidth]{punto1/p1_ws_wifi_lan_20k.jpeg}
-    \caption{Wireshark Wifi - Lan, 20000}
-    \label{fig:ws_wifi_lan_20k}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\columnwidth]{punto1/p1_ws_wifi_lan_40k.jpeg}
-    \caption{Wireshark Wifi - Lan, 40000}
-    \label{fig:ws_wifi_lan_40k}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\columnwidth]{punto1/p1_ws_wifi_lan_60k.jpeg}
-    \caption{Wireshark Wifi - Lan, 60000}
-    \label{fig:ws_wifi_lan_6k}
-\end{figure}
-
-\subsection{Montaje}
-
-%Explique:
-% Encabezado IPv4. Explicar de acuerdo al montaje (instalación) realizada en la parte 1 los valores obtenidos.
-% Campos de ICMP (Echo Request / Echo Reply). Cuando ejecuto los pings.
-% Tiempos de ida y vuelta (RTT). Cuando ejecuto los pings.
-% Compare velocidades teóricas vs. Prácticas, cambiando el tamaño del ping
-
-\subsection{Aplicación IA}
-Se exportar la captura. pcap y usar una herramienta de IA que explique lospatrones de tráfico, anomalías y latencias.
+\input{punto1/p1_ws.tex}
