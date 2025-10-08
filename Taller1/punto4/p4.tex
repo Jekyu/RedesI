@@ -1,1 +1,125 @@
-\section{Proyecto integrador con IA}
+\section{\textbf{Proyecto integrador con IA}}
+Una universidad planea implementar una red híbrida:
+    \begin{itemize}
+        \item Ethernet (IEEE 802.3) para laboratorios de alta capacidad.
+        \item WiFi (IEEE 802.11) para áreas comunes.
+    \end{itemize}
+
+    \textbf{Requisitos}
+    \begin{enumerate}
+        \item 5000 usuarios simultáneos.
+        \item Soporte a videoconferencia con <100 ms de latencia.
+        \item Protección contra ataques ICMP.
+        \item Priorización de tráfico académico sobre recreativo.
+    \end{enumerate}
+
+\subsection{\textbf{Plan de direccionamiento}}
+Se propone un plan de direccionamiento IPv4 privado con subredes, usando la red privada 10.0.0.0/8 para tener un amplio rango de direcciones.\\
+
+Subredes propuestas:
+
+\begin{itemize}
+    \item {Red administrativa y servidores}:
+        \subitem 10.0.1.0/24
+    \item {Laboratorios (Ethernet)}:
+        \subitem 10.0.2.0/23 a 10.0.10.0/23 (varias subredes según laboratorios)
+    \item {WiFi áreas comunes}:
+        \subitem 10.0.20.0/22 (para hasta ~1000 usuarios por segmento)
+    \item {WiFi invitados}:
+        \subitem 10.0.30.0/24
+    \item {Dispositivos IoT y control}:
+        \subitem 10.0.40.0/24
+    \item {Infraestructura de red (routers, switches, AP)}:
+        \subitem 10.0.254.0/24\\
+\end{itemize}
+
+Con este esquema se soportan más de 5000 usuarios, con espacio para expansión.
+
+\subsection{\textbf{Políticas de seguridad informática}}
+
+Diseñar políticas de seguridad informática (firewall, segmentación de redes IP, IDS/IPS).\\
+
+%Hay que hacer un prototipo (escenario pequeño con redes IEEE 802.3 e IEEE 802.11), donde se configuren VLMS e implemente (firewall, segmentación de redes IP, IDS/IPS ).
+%
+
+\subsubsection{\textbf{Arquitectura de Seguridad General}}
+Defensa en Profundidad:
+
+\begin{itemize}
+    \item \textbf{Capa 1:} Firewall perimetral
+    \item \textbf{Capa 2:} Segmentación con VLANs
+    \item \textbf{Capa 3:} IDS/IPS interno
+    \item \textbf{Capa 4:} Seguridad en endpoints
+\end{itemize}
+
+\subsubsection{\textbf{Configuración Detallada de Firewall}}
+
+\subsubsection*{Bloqueo ICMP específico}
+\begin{minted}[fontsize=\small, linenos, bgcolor=lightgray]{python}
+    # Ping flood
+    deny icmp any any echo-request
+    # Respuestas no solicitadas
+    deny icmp any any echo-reply
+    # ICMP interno permitido
+    allow icmp 10.0.0.0/16 any
+\end{minted}
+
+\subsubsection*{Acceso administrativo}
+\begin{minted}[fontsize=\small, linenos, bgcolor=lightgray]{python}
+    # SSH solo desde red admin
+    allow tcp 10.0.0.0/24 any eq 22
+    # HTTPS admin
+    allow tcp 10.0.0.0/24 any eq 443
+\end{minted}
+
+
+\subsubsection*{Servicios públicos}
+\begin{minted}[fontsize=\small, linenos, bgcolor=lightgray]{python}
+    # Web HTTP/HTTPS
+    allow tcp any any eq 80,443
+    # DNS
+    allow udp any any eq 53
+    # NTP
+    allow udp any any eq 123
+\end{minted}
+
+
+\subsubsection*{Videoconferencia}
+\begin{minted}[fontsize=\small, linenos, bgcolor=lightgray]{python}
+    # RTP/RTSP
+    allow tcp any any range 5000-6000
+    # Puertos multimedia
+    allow udp any any range 10000-20000
+\end{minted}
+
+
+\subsubsection*{Bloqueo general}
+\begin{minted}[fontsize=\small, linenos, bgcolor=lightgray]{python}
+    # Denegar todo lo no permitido
+    deny ip any any
+\end{minted}
+
+\subsubsection{\textbf{Reglas de Salida (Outbound)}}
+
+\subsubsection*{Tráfico académico prioritario}
+\begin{minted}[fontsize=\small, linenos, bgcolor=lightgray]{python}
+    allow tcp 10.0.0.0/16 any
+    eq 80,443,22,23,25,110,143
+    allow udp 10.0.0.0/16 any
+    eq 53,123,161,162
+\end{minted}
+
+\subsubsection*{Restricciones WiFi invitados}
+\begin{minted}[fontsize=\small, linenos, bgcolor=lightgray]{python}
+allow tcp 10.0.32.0/21 any eq 80,443,53
+deny tcp 10.0.32.0/21 10.0.0.0/16
+# No acceso a red interna
+\end{minted}
+
+
+
+\subsection{\textbf{Mecanismos de calidad de Servicio}}
+Implementar mecanismos de calidad de Servicio, Quality Of servive , QoS. (ej. DSCP, colas de prioridad) en el prototipo (escenario de redes IEEE 802.3 e IEEE 802.11).
+
+\subsection{\textbf{Esquema visual de la red}}
+Aplicación IA: solicitar a una herramienta de IA la generación de un esquema visual de la red y presente algunas características de gestión de red (velocidades de Tx, desempeños, errores, ataques, logs…entre otros).
