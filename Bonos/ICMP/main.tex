@@ -1,14 +1,73 @@
 \documentclass[12pt]{IEEEtran}
 \input{settings.tex}
-\title{Bono # - Redes de comunicaciones I}
+\title{Bono 20 Noviembre - Redes de comunicaciones I}
 \author{Juan Esteban Oviedo Sandoval - 20192020064 \\ {\href{mailto:jeoviedos@gmail.com}{jeoviedos@udistrital.edu.co}}}
 \date{Octubre 2025}
 
 \begin{document}
     \maketitle
-    \input{intro/intro.tex}
-    \input{punto1/p1.tex}
-    \input{punto2/p2.tex}
-    \input{punto3/p3.tex}
-    \input{punto4/p4.tex}
+    \section{ICMP Tipo 0: Echo Reply}
+        Respuesta a un Echo Request (ping)
+
+        \subsection{Características:}
+        \begin{itemize}
+            \item \textbf{Code:} Siempre 0
+            \item \textbf{Uso:} Confirmar que un host está activo y reachable
+            \item \textbf{Datos:} Incluye los mismos datos que el Echo Request
+            \item \textbf{Ejemplo:} Cuando haces ping google.com, la respuesta es Tipo 0
+        \end{itemize}
+
+        \begin{figure}[h!]
+            \centering
+            \includegraphics[width=\columnwidth]{images/ICMP_0.jpg}
+            \caption{ICMP Tipo 0}
+        \end{figure}
+
+    \section{ICMP Tipo 3: Destination Unreachable}
+        Su función es indicar que un paquete no puede ser entregado
+
+        \subsection{Códigos importantes:}
+            \begin{itemize}
+                \item \textbf{Code 0}: Net unreachable - Red inalcanzable
+                \item \textbf{Code 1}: Host unreachable - Host inalcanzable
+                \item \textbf{Code 2}: Protocol unreachable - Protocolo no soportado
+                \item \textbf{Code 3}: Port unreachable - Puerto inalcanzable
+                \item \textbf{Code 4}: Fragmentation needed - Se necesita fragmentación
+                \item \textbf{Code 5}: Source route failed - Ruta fuente falló
+                \item \textbf{Code 6}: Destination network unknown - Red destino desconocida
+                \item \textbf{Code 7}: Destination host unknown - Host destino desconocido
+                \item \textbf{Code 9}: Communication administratively prohibited - Bloqueado por firewall
+            \end{itemize}
+
+        \subsection{Casos de uso:}
+            \begin{itemize}
+                \item Intentar conectar a un puerto cerrado
+                \item Host apagado o inexistente
+                \item Red no routeable
+                \item Firewall bloqueando tráfico
+            \end{itemize}
+
+        \begin{figure}
+            \centering
+            \includegraphics[width=\columnwidth]{images/ICMP_3.jpg}
+            \caption{ICMP Tipo 3}
+        \end{figure}
+
+    \section{ICMP Tipo 8: Echo Request}
+    Solicitar una respuesta (ping) para verificar conectividad
+
+
+    \subsection{Características:}
+
+    \begin{itemize}
+        \item Code: Siempre 0
+        \item Contiene: Identifier, Sequence Number y Data
+        \item Herramientas: ping, Test-Connection, nping
+        \item Respuesta esperada: ICMP Tipo 0 (Echo Reply)
+    \end{itemize}
+
+    \begin{figure}[!h]
+        \includegraphics[width=\columnwidth]{images/ICMP_8.jpg}
+        \caption{ICMP tipo 8}
+    \end{figure}
 \end{document}
