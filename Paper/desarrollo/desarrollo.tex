@@ -1,0 +1,104 @@
+\section{Desarrollo}
+
+El desarrollo del aplicativo web se organiza en sprints alineados con la metodología ágil (Scrum/Kanban). Las prácticas recomendadas incluyen integración continua (CI), revisión de código (pull requests), despliegues a entornos de staging y pruebas automatizadas. A continuación se detallan los componentes, tecnologías sugeridas y ejemplos concretos de artefactos a desarrollar.
+
+\subsection{Tecnologías y stack sugerido}
+Se recomienda el siguiente stack por equilibrio entre madurez, ecosistema y facilidad de despliegue:
+
+\begin{itemize}
+  \item \textbf{Frontend:} React + TypeScript, React Router, Tailwind CSS para diseño rápido y accesible. Librerías: React Query / SWR para data fetching, Formik + Yup para validación de formularios.
+  \item \textbf{Backend:} FastAPI (Python) o Node.js (NestJS/Express) para APIs REST; preferencia por FastAPI por su desempeño y fácil integración con modelos Python de IA.
+  \item \textbf{Base de datos:} PostgreSQL (principal), Redis (cache, rate limiting, colas ligeras).
+  \item \textbf{Mensajería/Tareas asíncronas:} RabbitMQ o Redis Streams + Celery (para Python) o BullMQ (para Node.js).
+  \item \textbf{Almacenamiento de archivos:} S3 compatible (AWS S3, MinIO).
+  \item \textbf{Contenerización y orquestación:} Docker + Kubernetes (opcional para producción); Docker Compose para desarrollo local.
+  \item \textbf{CI/CD:} GitHub Actions / GitLab CI para pipelines de build, test y despliegue.
+  \item \textbf{IA / ML:} Python (PyTorch / TensorFlow, scikit-learn), modelos OCR (TrOCR, Tesseract + postprocesamiento ML), XGBoost o LSTM para forecasting, OR-Tools / RL para ruteo.
+  \item \textbf{Monitoreo:} Prometheus, Grafana, Loki (logs), OpenTelemetry (tracing).
+\end{itemize}
+
+\subsection{Estructura del repositorio}
+Propuesta de monorepo con carpetas principales:
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.75\columnwidth]{desarrollo/raiz.png}
+\caption{Estructura componentes}
+\end{figure}
+
+\subsection{Contratos API y ejemplos}
+A modo de referencia, se proponen los siguientes endpoints REST (JSON):
+
+\textbf{Autenticación}
+\begin{verbatim}
+POST /api/v1/auth/login   -> {email, password}
+  -> {access_token, refresh_token}
+POST /api/v1/auth/register
+POST /api/v1/auth/refresh -> {refresh_token}
+\end{verbatim}
+
+\textbf{Pedidos}
+\begin{verbatim}
+POST /api/v1/orders
+  body: {patient_id, items:[{drug_id, qty}],
+  payment_method, delivery_address, recipe_file_id}
+
+GET /api/v1/orders/{order_id}
+  PATCH /api/v1/orders/{order_id}/status->
+  {status: "preparing"|"ready"|"out_for_delivery"|
+    "delivered"}
+\end{verbatim}
+
+\textbf{Inventario}
+\begin{verbatim}
+GET /api/v1/inventory?drug_id=...
+POST /api/v1/inventory/update  ->
+stock adjustments by pharmacy staff
+\end{verbatim}
+
+\textbf{IA / OCR}
+\begin{verbatim}
+POST /api/v1/ai/ocr
+  body: {file_id}
+  returns: {recognized_items:
+    [{name, dosage, quantity, confidence}],
+    errors:[]}
+\end{verbatim}
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=0.75\columnwidth]{desarrollo/endpoint}
+	\caption{Endpoint Orden}
+\end{figure}
+
+\subsection{Esquema de base de datos (resumen)}
+Tablas principales (simplificado):
+
+\begin{verbatim}
+users (id, name, email, hashed_password,
+  role, created_at)
+patients (id, user_id, dob, contact_info)
+drugs (id, name, dosage_form, unit_price,
+  ndc, stock_level)
+orders (id, patient_id, created_at, status,
+  total_price, delivery_address)
+order_items (id, order_id, drug_id, qty, price)
+recipes (id, patient_id, file_path, ocr_data,
+  validated)
+deliveries (id, order_id, courier_id, eta,
+  route_id, status)
+audit_logs (id, user_id, action, resource,
+  timestamp)
+\end{verbatim}
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=0.75\columnwidth]{desarrollo/db.png}
+	\caption{Estructura Base de Datos relacional}
+\end{figure}
+
+\subsection{Desarrollo de la capa IA}
+El módulo IA se desarrolla separando dos pipelines: \textit{inferencia online} y \textit{entrenamiento offline}. Para la inferencia (p. ej. OCR y predicción de demanda ligera) se desplegarán endpoints en \texttt{ai-service} que ejecuten modelos optimizados y versionados (MLflow o TorchServe). Para entrenamiento y reentrenamiento se usará un pipeline con DAGs (Airflow o Prefect) que ejecute tareas programadas: limpieza de datos, preparación de features, reentrenamiento y registro de modelos.
+
+\subsection{Calidad y pruebas}
+Se sugiere una estrategia de pruebas completa: unitarias (pytest / Jest), integración, end-to-end (Cypress / Playwright) y pruebas de carga (k6). En CI se ejecutan linters, tests y análisis estático antes de permitir merges. Además, se incluyen pruebas de seguridad (SAST) y escaneo de dependencias.

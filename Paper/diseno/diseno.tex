@@ -1,0 +1,29 @@
+\section{Diseño}
+
+El diseño del sistema parte de la premisa de ofrecer una plataforma web escalable y segura que permita a pacientes, personal de farmacia y gestores de logística coordinar la solicitud, preparación y entrega de medicamentos. La arquitectura propuesta es de tipo \textit{microservicios} con las siguientes capas principales: interfaz de usuario (frontend web), API gateway / backend (servicios REST), capa de procesamiento de IA, bases de datos y subsistema de mensajería/colas para tareas asíncronas y notificaciones.\\
+
+En el frontend se propone una aplicación web responsiva desarrollada con React (o Vue) que proporcione flujos claros para:
+\begin{itemize}
+    \item Captura o carga de receta.
+    \item Visualización de inventario y precios.
+    \item Realización de pedidos y pago.
+    \item Seguimiento en tiempo real del estado del pedido.
+\end{itemize}
+ El diseño de la UI seguirá principios de accesibilidad (WCAG) para asegurar usabilidad por parte de pacientes con movilidad reducida o limitaciones sensoriales.\\
+
+El backend se organiza en microservicios para facilitar escalabilidad y despliegue independiente:
+\begin{itemize}
+    \item \textbf{auth-service}: gestión de usuarios, roles y tokens
+    \item \textbf{orders-service}: pedido y estado
+    \item \textbf{inventory-service}: stock y caducidades
+    \item \textbf{routing-service}: generación de rutas y asignación de mensajeros
+    \item \textbf{notification-service}: notificaciones push, correo y SMS
+    \item \textbf{ai-service}: OCR, predicción de demanda y optimización de rutas.
+\end{itemize}
+ Los servicios exponen APIs REST (JSON) y se comunican internamente por HTTP/HTTPS y, cuando se requiere baja latencia o mensajes asíncronos, por una cola (RabbitMQ / Kafka).\\
+
+En la capa de datos se propone usar PostgreSQL como base de datos relacional principal por su robustez y ACID; Redis para cache (sesiones, información de carrito) y como broker para tareas rápidas; y un almacén de objetos (S3 compatible) para recetas escaneadas y archivos. Para los modelos de IA y trabajos batch (reentrenamiento, scoring masivo) se emplea un cluster ML separado (puede ser un entorno Kubernetes con nodos GPU o instancias en la nube).
+
+Desde el punto de vista de la seguridad y cumplimiento, se recomienda cifrado TLS en tránsito, cifrado en reposo para datos sensibles, control de acceso basado en roles (RBAC), registro de auditoría y la implementación de prácticas de privacidad (minimización de datos, consentimiento explícito) para cumplir marcos regulatorios locales aplicables (por ejemplo consideraciones tipo HIPAA cuando corresponda).
+
+Finalmente, el sistema incluye paneles de observabilidad (Prometheus + Grafana), trazas distribuidas (OpenTelemetry) y alertas (PagerDuty/opsgenie) para operar la plataforma con garantías de disponibilidad y respuesta ante incidentes.

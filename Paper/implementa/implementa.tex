@@ -1,0 +1,57 @@
+\section{Implementación}
+
+La etapa de implementación abarca el despliegue, pruebas en entorno realista y puesta en producción con mecanismos de observabilidad y escalado. A continuación se detallan pasos prácticos y consideraciones concretas para llevar el sistema desde el repositorio hasta el entorno productivo.
+
+\subsection{Entornos y pipeline CI/CD}
+Se definen tres entornos mínimos: \textbf{development}, \textbf{staging} y \textbf{production}. Las ramas Git fluyen así: \texttt{feature/*} → \texttt{develop} → \texttt{staging} → \texttt{main} (producción). Una pipeline típica en GitHub Actions incluye:
+
+\begin{enumerate}
+  \item \textbf{Build:} compilar frontend (bundle), construir imágenes Docker para cada servicio.
+  \item \textbf{Test:} ejecutar tests unitarios, integración y e2e en entorno aislado.
+  \item \textbf{Scan:} SAST y análisis de dependencias.
+  \item \textbf{Push:} publicar imágenes en registry (Docker Hub / ECR / GCR).
+  \item \textbf{Deploy:} actualización del cluster Kubernetes con Helm charts o uso de infraestructura serverless si aplica.
+\end{enumerate}
+
+\subsection{Contenerización y orquestación}
+Cada servicio se empaca en su propia imagen Docker. En Kubernetes se utilizan Deployment + Horizontal Pod Autoscaler para escalar réplicas según CPU o métricas personalizadas (latencia de cola, tamaño de backlog). Se recomienda usar Ingress (Nginx Ingress Controller) con TLS provisto por cert-manager y Let's Encrypt. Para entornos más pequeños, Docker Compose puede ser suficiente.
+
+\subsection{Seguridad en producción}
+Para proteger datos sensibles y cumplir regulaciones:
+
+\begin{itemize}
+  \item Usar HTTPS estrictamente y HSTS.
+  \item Cifrar datos en reposo (Postgres TDE o cifrado a nivel de disco/volumen) y en tránsito (TLS).
+  \item Implementar RBAC y scopes mínimos (principio de menor privilegio).
+  \item Tokens JWT con expiración corta y refresh tokens; almacenamiento seguro de refresh tokens (httpOnly cookies o almacenamiento server-side).
+  \item Registro de auditoría inmutable (ej.: envío a un almacén de logs con retención).
+  \item Escaneo regular de vulnerabilidades y parches programados.
+\end{itemize}
+
+\subsection{Integración y despliegue de modelos de IA}
+Los modelos se versionan y se exponen a través de endpoints REST o gRPC en \texttt{ai-service}. Para garantizar latencia baja, se siguen estas prácticas:
+
+\begin{itemize}
+  \item \textbf{Optimización:} conversión a formatos optimizados (TorchScript, ONNX), cuantización si procede.
+  \item \textbf{Caching:} cachear resultados de OCR de archivos ya procesados.
+  \item \textbf{Autoscaling:} políticas de escalado basadas en métricas de inferencia (requests/s, latencia).
+  \item \textbf{Rollback}: guardar versiones de modelos y permitir rollback seguro si se detecta degradación.
+  \item \textbf{Monitoreo ML:} métricas de inferencia (latencia, throughput) y métricas de calidad (drift detection, accuracy on holdout).
+\end{itemize}
+
+\subsection{Operación y monitoreo}
+Se debe establecer una vista operativa centralizada con:
+
+\begin{itemize}
+  \item \textbf{Métricas:} Prometheus para métricas de servicios, uso de CPU/RAM, latencias y filas de tareas.
+  \item \textbf{Dashboards:} Grafana para KPIs operativos (tiempo promedio de preparación, entregas por hora, tasa de errores).
+  \item \textbf{Logs:} Loki / ELK stack para logs estructurados y búsquedas de incidentes.
+  \item \textbf{Tracing:} OpenTelemetry para traza distribuida y análisis de latencia end-to-end.
+  \item \textbf{Alertas:} reglas en Prometheus / Grafana que disparen notificaciones por degradación de servicio.
+\end{itemize}
+
+\subsection{Prueba piloto y despliegue gradual}
+Antes de un despliegue global, ejecutar una prueba piloto en un único centro médico o con un subconjunto de usuarios reales. Medir KPIs clave: tiempo total desde pedido a entrega, tasa de errores en dispensación, coste por entrega, satisfacción del usuario. Usar despliegue canario o blue-green para minimizar riesgos y permitir rollback rápido si se detectan problemas.
+
+\subsection{Mantenimiento y evolución}
+Finalmente, planificar mantenimiento evolutivo: ciclo regular de reentrenamiento de modelos (batch semanal/mensual según datos), revisiones de seguridad, actualizaciones de dependencias y retroalimentación continua del personal para mejoras iterativas. Documentar APIs, runbooks y procedimientos de recuperación ante desastres (RTO/RPO) para asegurar continuidad operativa.

@@ -1,0 +1,10 @@
+\section{Resultados}
+
+La construcción del sistema web modular permitió validar la viabilidad técnica y conceptual de la arquitectura propuesta. Durante las fases de diseño, desarrollo e implementación, se obtuvieron resultados significativos que respaldan la pertinencia del enfoque adoptado.\\
+
+En primer lugar, la separación del ecosistema en microservicios independientes demostró ser altamente efectiva para garantizar la escalabilidad horizontal del sistema. Cada uno de los servicios —\textit{auth-service}, \textit{orders-service}, \textit{inventory-service}, \textit{ai-service} y \textit{notification-service}— pudo ser desplegado, probado y monitoreado de manera autónoma. Este desacoplamiento permitió detectar fallos específicos y realizar optimizaciones puntuales sin afectar el funcionamiento global del sistema.\\
+
+En relación con el desempeño del sistema, las pruebas iniciales indicaron tiempos de respuesta estables en la mayor parte de las operaciones CRUD, especialmente en los servicios de autenticación e inventario. La integración del \textit{ai-service} mostró una mejora en los procesos de toma de decisiones, especialmente en la generación automática de recomendaciones y predicciones basadas en los patrones de uso observados. Esto sugiere que la inteligencia artificial puede convertirse en un pilar fundamental para futuras mejoras funcionales.\\
+
+Asimismo, el módulo de notificaciones mostró un comportamiento eficiente en la gestión de alertas internas, con un consumo reducido de recursos gracias al uso de colas asíncronas. Por último, la organización del proyecto bajo la estructura propuesta permitió simplificar los procesos de construcción, documentación y pruebas, lo que facilitó la colaboración entre desarrolladores y contribuyó a obtener un producto más ordenado y mantenible.\\
+\\
